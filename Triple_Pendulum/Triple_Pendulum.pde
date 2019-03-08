@@ -40,7 +40,7 @@ void draw() {
   imageMode(CORNER);
   image(canvas, 0, 0, width, height);
   
-  for (int I = 0; I < 100000; I = I+1) {
+  for (int I = 0; I < 10000; I = I+1) {
     
     float a = Length1 * (Mass1 + Mass2 + Mass3);
     float b = - grav * (Mass1 + Mass2 + Mass3) * sin(Theta1) - Length2 * (Mass2 + Mass3) * (Omega2 * Omega2 * sin(Theta1 - Theta2)) - Length3 * Mass3 * Omega3 * Omega3 * sin(Theta1 - Theta3);
@@ -61,12 +61,12 @@ void draw() {
     Omega_dot2 = b * (h * k + g * i) / (lambda) + f * (a * i - d * k) / (lambda) + j * (a * h + g * d) / (lambda);
     Omega_dot3 = b * (g * l + e * k) / (lambda) + f * (a * l + c * k) / (lambda) + j * (a * e - g * c) / (lambda);
   
-    Omega1 += 0.000001 * Omega_dot1;
-    Omega2 += 0.000001 * Omega_dot2;
-    Omega3 += 0.000001 * Omega_dot3;
-    Theta1 += 0.000001 * Omega1;
-    Theta2 += 0.000001 * Omega2;
-    Theta3 += 0.000001 * Omega3;
+    Omega1 += 0.00001 * Omega_dot1;
+    Omega2 += 0.00001 * Omega_dot2;
+    Omega3 += 0.00001 * Omega_dot3;
+    Theta1 += 0.00001 * Omega1;
+    Theta2 += 0.00001 * Omega2;
+    Theta3 += 0.00001 * Omega3;
     
     if (Theta1 < -2 * PI) {
       Theta1 += 2 * PI;
