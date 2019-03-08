@@ -1,4 +1,4 @@
-// Double Pendulum tool to accompany work on Lagrangian Mechanics
+// Double Pendulum tool with special relitavistic corrections to accompany work on Lagrangian Mechanics
 // Enter values for various setups you wish to see by modifying the variables below
 
 int Length1 = 1;
@@ -67,6 +67,19 @@ void draw() {
     relmass1 = Mass1 * gamma;
     relmass2 = Mass2 * phi;
     
+    if (Theta1 < -2 * PI) {
+      Theta1 += 2 * PI;
+    }
+    if (Theta2 < -2 * PI) {
+      Theta2 += 2 * PI;
+    }
+    if (Theta1 > 2 * PI) {
+      Theta1 -= 2 * PI;
+    }
+    if (Theta2 > 2 * PI) {
+      Theta2 -= 2 * PI;
+    }
+    
   }
   
   translate(cx, cy);
@@ -79,12 +92,6 @@ void draw() {
   float x2 = x1 + 100 * Length2 * sin(Theta2);
   float y2 = y1 + 100 * Length2 * cos(Theta2);
   
-  //float x10 = 100 * Length1 * sin(t10);
-  //float y10 = 100 * Length1 * cos(t10);
-
-  //float x20 = x10 + 100 * Length2 * sin(t20);
-  //float y20 = y10 + 100 * Length2 * cos(t20);
-  
   line(0, 0, x1, y1);
   fill(0);
   ellipse(x1, y1, 200 * relmass1, 200 * relmass1);
@@ -92,14 +99,6 @@ void draw() {
   line(x1, y1, x2, y2);
   fill(0);
   ellipse(x2, y2, 200 * relmass2, 200 * relmass2);
-  
-  //line(0, 0, x10, y10);
-  //fill(0);
-  //ellipse(x10, y10, 200 * Mass1, 200 * Mass1);
-
-  //line(x10, y10, x20, y20);
-  //fill(0);
-  //ellipse(x20, y20, 200 * Mass2, 200 * Mass2);
   
    canvas.beginDraw();
   canvas.translate(cx, cy);

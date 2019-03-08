@@ -51,6 +51,19 @@ void draw() {
     Omega2 += 0.00001 * Omega_dot2;
     Theta1 += 0.00001 * Omega1;
     Theta2 += 0.00001 * Omega2;
+    
+    if (Theta1 < -2 * PI) {
+      Theta1 += 2 * PI;
+    }
+    if (Theta2 < -2 * PI) {
+      Theta2 += 2 * PI;
+    }
+    if (Theta1 > 2 * PI) {
+      Theta1 -= 2 * PI;
+    }
+    if (Theta2 > 2 * PI) {
+      Theta2 -= 2 * PI;
+    }
   }
   
   translate(cx, cy);

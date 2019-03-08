@@ -1,3 +1,7 @@
+// Pendulum tool with special relitavistic corrections to accompany work on Lagrangian Mechanics.
+// Enter values for various setups you wish to see by modifying the variables below.
+// 2 Pendulums will be displayed, one with special relitavistic corrections, one without.
+
 float Theta =  2 * PI / 4;
 float r = 1;
 float g = 9.81;
@@ -49,6 +53,19 @@ void draw() {
     Theta2 += 0.000001 * Omega2;
     
     mass = pow(gamma, -.5) * m_0; 
+    
+    if (Theta < -2 * PI) {
+      Theta += 2 * PI;
+    }
+    if (Theta2 < -2 * PI) {
+      Theta2 += 2 * PI;
+    }
+    if (Theta > 2 * PI) {
+      Theta -= 2 * PI;
+    }
+    if (Theta2 > 2 * PI) {
+      Theta2 -= 2 * PI;
+    }
   }
   
   translate(cx, cy);
