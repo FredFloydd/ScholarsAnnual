@@ -3,8 +3,7 @@
 import numpy as np
 import math
 from tqdm import tqdm
-
-
+import numba
 
 def generate_variables(n, angles, variables, masses):
 	omega_vec = []
@@ -36,18 +35,18 @@ def calculate_matrices(coefficients, angles, omegas, n, g):
 	omg_mat = []
 	grav_vec = []
 	omgsq_vec = []
+
 	for i in range(n):
-		row = []
-		row2 = []
-		for j in range(n):
-			row.append(math.cos(angles[i] - angles[j]))
-			row2.append(math.sin(angles[i] - angles[j]))
-		acc_mat.append(row)
-		omg_mat.append(row2)
 		grav_vec.append(- g * coefficients[i][i] * math.sin(angles[i]))
 		omgsq_vec.append(omegas[i] ** 2 / n)
-	mat1 = np.array(acc_mat)
-	mat2 = np.array(omg_mat)
+		
+
+	angle_sub = np.expand_dims(angles, 1) - np.expand_dims(angles, 0)
+	acc_mat = np.cos(angle_sub)
+	omg_mat = np.sin(angle_sub)
+
+	mat1 = acc_mat 
+	mat2 = omg_mat 
 	mat3 = np.array(grav_vec)
 	mat4 = np.array(omgsq_vec)
 	acc_coeffs = np.multiply(mat1, coefficients)
@@ -63,30 +62,33 @@ def run(n, g, masses, angles, time, ips, file1, file2):
 	generate_variables(n, angles, variables, masses)
 	t = 1 / ips
 	results = []
-	masses=np.array(masses)
+	masses = np.array(masses)
 	np.savetxt(file1, masses, delimiter=",")
 	frame_decider = ips / 100
 	for i in tqdm(range(time * ips)):
 		big = calculate_matrices(variables['coeffs'], variables['thetas'], variables['omegas'], n, g)
 		variables['accs'] = n * big
-		for k in range(n):
-			variables['omegas'][k] += variables['accs'][k] * t
-			variables['thetas'][k] += variables['omegas'][k] * t
-			if variables['thetas'][k] > math.pi:
-				variables['thetas'][k] -= 2 * math.pi
-			elif variables['thetas'][k] < -math.pi:
-				variables['thetas'][k] += 2 * math.pi
+		variables['accs'] = np.clip(variables['accs'], -1.0e10, 1.0e10)
+		variables['omegas'] += variables['accs'] * t
+		variables['omegas'] = np.clip(variables['omegas'], -1.0e10, 1.0e10)
+		variables['thetas'] += variables['omegas'] * t
+
 		if i % frame_decider == 0:
 			results.append(variables['thetas'].copy())
-	results=np.array(results)
+
+	results = np.array(results)
 	np.savetxt(file2, results, delimiter=",")
 	return results
 
+number = 100
+iterations = 10000000
+time = 30
+
 masses = []
 angles = []
-theta = 5 * math.pi/6
-for n in range(2):
-	masses.append(0.01)
-	angles.append(theta) 
+theta =  math.pi/4
+for n in range(number):
+	masses.append(1/number)
+	angles.append(theta)
 
-run(2, 9.81, masses, angles, 30, 10000, 'MassData.csv', 'AngleData.csv')
+run(number, 9.81, masses, angles, time, iterations, 'MassData.csv', 'AngleData.csv')

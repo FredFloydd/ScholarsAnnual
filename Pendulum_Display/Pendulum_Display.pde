@@ -28,7 +28,7 @@ void draw() {
   
   
   if (frameCount < 2) {
-    String[] lines = loadStrings("/AngleData.csv");
+    String[] lines = loadStrings("AngleData.csv");
 
     float[][] numbers = new float[lines.length][];
 
@@ -42,7 +42,7 @@ void draw() {
     }
   }
   if (frameCount < 2) {
-    String[] lines = loadStrings("/MassData.csv");
+    String[] lines = loadStrings("MassData.csv");
 
     float[] numbers = new float[lines.length];
 
